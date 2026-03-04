@@ -165,8 +165,33 @@
     </nav>
 </header>
 
+
+
+
 <section class="hero">
-    <h1>Salom, men <span>Abdulloh</span></h1>
+    <form method="post">
+        {% csrf_token %}
+    <label for="course_name">Kurs nomi</label>
+    <input type="text" placeholder="Kurs nomini kiriting..." required name="course_name">
+        <br>
+    <label for="course_price">Kurs narxi</label>
+    <input type="number" min="0" name="course_price" required>
+        <br>
+    <label for="Chegirma turi">Chegirma turi</label>
+    <select name="discount_type">
+        <option value="flex">Aniq summa</option>
+        <option value="percent">Foizli</option>
+    </select>
+    <br>
+    <label for="discount">Chegirma miqdori</label>
+    <input type="number" min="0" value="0">
+    <br>
+    <button class="btn btn-outline" type="reset">Tozalash</button>
+    <button class="btn btn-primary" type="submit">Yaratish</button>
+
+</form>
+
+    <h1>Salom, men <span>AAA</span></h1>
     <p>
         Men Django Backend Developer va zamonaviy web ilovalar yarataman.
         Tezkor, xavfsiz va professional loyihalar tayyorlayman.
