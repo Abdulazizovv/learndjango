@@ -1,231 +1,37 @@
-<!DOCTYPE html>
-<html lang="uz">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfolio</title>
-
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background: #0f172a;
-            color: white;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 8%;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(10px);
-        }
-
-        header h2 {
-            color: #38bdf8;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: white;
-            margin-left: 25px;
-            transition: 0.3s;
-        }
-
-        nav a:hover {
-            color: #38bdf8;
-        }
-
-        .hero {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0 8%;
-            text-align: center;
-            flex-direction: column;
-        }
-
-        .hero h1 {
-            font-size: 48px;
-        }
-
-        .hero h1 span {
-            color: #38bdf8;
-        }
-
-        .hero p {
-            margin: 20px 0;
-            max-width: 600px;
-            color: #cbd5e1;
-        }
-
-        .buttons {
-            margin-top: 20px;
-        }
-
-        .btn {
-            padding: 12px 28px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: 0.3s;
-            margin: 10px;
-            display: inline-block;
-        }
-
-        .btn-primary {
-            background: #38bdf8;
-            color: #0f172a;
-        }
-
-        .btn-primary:hover {
-            background: #0ea5e9;
-        }
-
-        .btn-outline {
-            border: 2px solid #38bdf8;
-            color: #38bdf8;
-        }
-
-        .btn-outline:hover {
-            background: #38bdf8;
-            color: #0f172a;
-        }
-
-        .section {
-            padding: 100px 8%;
-            text-align: center;
-        }
-
-        .section h2 {
-            font-size: 32px;
-            margin-bottom: 30px;
-            color: #38bdf8;
-        }
-
-        .skills {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .skill-card {
-            background: #1e293b;
-            padding: 20px 30px;
-            border-radius: 15px;
-            transition: 0.3s;
-        }
-
-        .skill-card:hover {
-            transform: translateY(-8px);
-            background: #334155;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: #020617;
-            color: #94a3b8;
-        }
-
-        @media(max-width: 768px) {
-            .hero h1 {
-                font-size: 32px;
-            }
-
-            nav {
-                display: none;
-            }
-        }
-    </style>
-</head>
-<body>
-
-<header>
-    <h2>MyPortfolio</h2>
-    <nav>
-        <a href="#">Home</a>
-        <a href="#about">About</a>
-        <a href="#skills">Skills</a>
-        <a href="#contact">Contact</a>
-    </nav>
-</header>
+{% extends 'main/base.html' %}
 
 
+{% block title %}
 
+Sahifa nomi
 
-<section class="hero">
-    <form method="post">
-        {% csrf_token %}
-    <label for="course_name">Kurs nomi</label>
-    <input type="text" placeholder="Kurs nomini kiriting..." required name="course_name">
-        <br>
-    <label for="course_price">Kurs narxi</label>
-    <input type="number" min="0" name="course_price" required>
-        <br>
-    <label for="Chegirma turi">Chegirma turi</label>
-    <select name="discount_type">
-        <option value="flex">Aniq summa</option>
-        <option value="percent">Foizli</option>
-    </select>
-    <br>
-    <label for="discount">Chegirma miqdori</label>
-    <input type="number" min="0" value="0">
-    <br>
-    <button class="btn btn-outline" type="reset">Tozalash</button>
-    <button class="btn btn-primary" type="submit">Yaratish</button>
+{% endblock %}
 
+{% block content %}
+
+<h1>Bizda hamma kurslar</h1>
+
+<form method="get">
+    <h3>Filtering</h3>
+    <label for="price_from">Boshlanish narxi</label>
+    <input type="number" min="0" name="price_from">
+
+    <label for="price_to">Tugash narxi</label>
+    <input type="number" min="0" name="price_to">
+    <button type="submit">Filterlash</button>
+
+    <h3>Qidiruv</h3>
+    <label for="search">Yozing</label>
+    <input type="text" name="search" placeholder="Kurs nomini kiriting" value="{{search}}">
+    <button type="submit">Qidirish</button>
 </form>
 
-    <h1>Salom, men <span>AAA</span></h1>
-    <p>
-        Men Django Backend Developer va zamonaviy web ilovalar yarataman.
-        Tezkor, xavfsiz va professional loyihalar tayyorlayman.
-    </p>
+<ul>
+    {% for kurs in courses %}
+    <li>{{kurs.title}} - {{kurs.price}} {% if kurs.discount %}- {{kurs.discount}} {% if kurs.discount_type == 'percent' %} % {% else %} so'm {% endif %} chegirma bor{% endif %} </li>
+    {% empty %}
+    <h2>Hech narsa topilmadi</h2>
+    {% endfor %}
+</ul>
 
-    <div class="buttons">
-        <a href="{% url 'about' %}" class="btn btn-primary">Bog'lanish</a>
-        <a href="#" class="btn btn-outline">Portfolio</a>
-    </div>
-</section>
-
-<section class="section" id="about">
-    <h2>Men haqimda</h2>
-    <p>
-        Men Python va Django asosida web dasturlar yarataman.
-        REST API, Authentication, va Database bilan ishlash tajribam bor.
-    </p>
-</section>
-
-<section class="section" id="skills">
-    <h2>Ko'nikmalarim</h2>
-    <div class="skills">
-        <div class="skill-card">Python</div>
-        <div class="skill-card">Django</div>
-        <div class="skill-card">DRF</div>
-        <div class="skill-card">HTML & CSS</div>
-        <div class="skill-card">PostgreSQL</div>
-        <div class="skill-card">Git</div>
-    </div>
-</section>
-
-<footer>
-    © 2026 MyPortfolio | Barcha huquqlar himoyalangan
-</footer>
-
-</body>
-</html>
+{% endblock %}
