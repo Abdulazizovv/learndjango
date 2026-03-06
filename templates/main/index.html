@@ -1,37 +1,90 @@
 {% extends 'main/base.html' %}
 
-
-{% block title %}
-
-Sahifa nomi
-
-{% endblock %}
-
 {% block content %}
+<div class="space-y-12">
+    
+    <div class="relative py-10">
+        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tighter mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/30">
+            Intellektual kurslar <br/> ekotizimi.
+        </h1>
+        <p class="text-gray-400 max-w-xl text-lg font-light leading-relaxed">
+            Sizning professional o'sishingiz uchun eng ilg'or texnologiyalar va metodikalar asosida tayyorlangan kurslar.
+        </p>
+    </div>
 
-<h1>Bizda hamma kurslar</h1>
+    <div class="glass p-2 rounded-2xl flex flex-col md:flex-row gap-2 items-center">
+        <form method="get" class="w-full flex flex-col md:flex-row gap-2">
+            <div class="relative flex-grow group">
+                <input type="text" name="search" value="{{search}}" placeholder="Kurslarni skanerlash..." 
+                       class="w-full bg-white/5 border-none rounded-xl py-4 px-6 focus:ring-2 focus:ring-indigo-500 transition-all outline-none text-white placeholder:text-gray-600">
+            </div>
 
-<form method="get">
-    <h3>Filtering</h3>
-    <label for="price_from">Boshlanish narxi</label>
-    <input type="number" min="0" name="price_from">
+            <div class="flex gap-2">
+                <input type="number" name="price_from" placeholder="Min Narx" 
+                       class="w-32 bg-white/5 border-none rounded-xl py-4 px-4 focus:ring-2 focus:ring-indigo-500 outline-none text-sm">
+                <input type="number" name="price_to" placeholder="Max Narx" 
+                       class="w-32 bg-white/5 border-none rounded-xl py-4 px-4 focus:ring-2 focus:ring-indigo-500 outline-none text-sm">
+            </div>
 
-    <label for="price_to">Tugash narxi</label>
-    <input type="number" min="0" name="price_to">
-    <button type="submit">Filterlash</button>
+            <button type="submit" class="pro-gradient px-8 py-4 rounded-xl font-bold text-white hover:opacity-90 transition shadow-xl shadow-indigo-500/20 active:scale-95">
+                Filtrlash
+            </button>
+        </form>
+    </div>
 
-    <h3>Qidiruv</h3>
-    <label for="search">Yozing</label>
-    <input type="text" name="search" placeholder="Kurs nomini kiriting" value="{{search}}">
-    <button type="submit">Qidirish</button>
-</form>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for kurs in courses %}
+        <div class="glass rounded-3xl p-8 hover:bg-white/5 transition-all duration-500 group border-white/5 hover:border-indigo-500/50 relative overflow-hidden">
+            <div class="absolute -right-10 -top-10 w-32 h-32 bg-indigo-500/10 blur-[80px] group-hover:bg-indigo-500/20 transition-all"></div>
 
-<ul>
-    {% for kurs in courses %}
-    <li>{{kurs.title}} - {{kurs.price}} {% if kurs.discount %}- {{kurs.discount}} {% if kurs.discount_type == 'percent' %} % {% else %} so'm {% endif %} chegirma bor{% endif %} </li>
-    {% empty %}
-    <h2>Hech narsa topilmadi</h2>
-    {% endfor %}
-</ul>
+            <div class="flex justify-between items-start mb-12">
+                <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 font-bold group-hover:scale-110 transition-transform">
+                    #{{ forloop.counter }}
+                </div>
+                {% if kurs.discount %}
+                <span class="text-[10px] font-bold py-1 px-3 bg-emerald-500/10 text-emerald-500 rounded-full border border-emerald-500/20 uppercase tracking-widest">
+                    Offer Active
+                </span>
+                {% endif %}
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4 group-hover:text-indigo-400 transition-colors">{{ kurs.title }}</h3>
+            
+            <div class="flex items-end justify-between mt-auto">
+                <div class="space-y-1">
+                    <p class="text-xs text-gray-500 uppercase tracking-widest">Kurs narxi</p>
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl font-bold">{{ kurs.price }}</span>
+                        <span class="text-sm text-gray-500 font-light">UZS</span>
+                    </div>
+                </div>
+                
+                <div class="h-10 w-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </div>
+            </div>
+
+            {% if kurs.discount %}
+            <div class="mt-6 pt-6 border-t border-white/5 flex items-center gap-2 text-sm text-gray-400 italic">
+                <span>⚡️ Chegirma:</span>
+                <span class="text-white font-bold">{{ kurs.discount }} {% if kurs.discount_type == 'percent' %}%{% else %}so'm{% endif %}</span>
+            </div>
+            {% endif %}
+        </div>
+        {% empty %}
+        <div class="col-span-full py-32 text-center glass rounded-3xl">
+            <div class="text-5xl mb-4">🔍</div>
+            <h3 class="text-xl font-bold text-gray-400 tracking-tight text-center uppercase">Ma'lumotlar bazasida hech narsa topilmadi</h3>
+            <p class="text-gray-600 mt-2">So'rovni o'zgartirib ko'ring yoki barcha kurslarni yuklang.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<footer class="py-20 text-center opacity-30 text-[10px] tracking-[0.5em] uppercase">
+    Designed for High-Performance Systems &copy; 2026
+</footer>
 
 {% endblock %}
