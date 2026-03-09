@@ -49,5 +49,13 @@ def index_view(request: HttpRequest):
     return render(request, "main/index.html", context)
 
 
+def course_detail(request, pk):
+    course = Course.objects.get(id=pk)
+    context = {
+        "course": course
+    }
+    return render(request, "main/course_detail.html", context)
+
+
 def about_developer(request):
     return render(request, "main/about.html")

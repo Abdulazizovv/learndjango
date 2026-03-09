@@ -1,0 +1,164 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="space-y-10">
+
+    <!-- Back Button -->
+    <div>
+        <a href="{% url 'index' %}" class="inline-flex items-center gap-2 text-xs text-gray-500 uppercase tracking-widest hover:text-white transition-colors group">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Barcha kurslar
+        </a>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="glass rounded-3xl p-10 relative overflow-hidden">
+        <!-- Background glow -->
+        <div class="absolute -right-20 -top-20 w-72 h-72 bg-indigo-500/10 blur-[120px] pointer-events-none"></div>
+        <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-purple-500/10 blur-[100px] pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col md:flex-row md:items-start md:justify-between gap-8">
+            <div class="flex-1">
+                <!-- Badge -->
+                {% if course.discount %}
+                <span class="inline-block text-[10px] font-bold py-1 px-3 bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20 uppercase tracking-widest mb-4">
+                    ⚡️ Chegirma Faol
+                </span>
+                {% endif %}
+
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tighter leading-tight mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/40">
+                    {{ course.title }}
+                </h1>
+
+                <p class="text-gray-500 text-sm uppercase tracking-widest font-mono">
+                    Kurs ID: #{{ course.id }}
+                </p>
+            </div>
+
+            <!-- Price Card -->
+            <div class="glass rounded-2xl p-6 min-w-[220px] space-y-4 border border-white/5">
+                <p class="text-[10px] text-gray-500 uppercase tracking-widest">Kurs narxi</p>
+
+                {% if course.discount %}
+                <div class="flex items-center gap-2">
+                    <span class="text-gray-500 line-through text-lg font-light">{{ course.price }}</span>
+                    <span class="text-xs text-gray-600 font-light">UZS</span>
+                </div>
+                <div class="flex items-end gap-2">
+                    <span class="text-4xl font-extrabold tracking-tighter text-white">{{ course.final_price|floatformat:0 }}</span>
+                    <span class="text-sm text-gray-400 mb-1 font-light">UZS</span>
+                </div>
+                <div class="flex items-center gap-2 text-sm text-emerald-400 italic">
+                    <span>Tejash:</span>
+                    <span class="font-bold">{{ course.discount }}{% if course.discount_type == 'percent' %}%{% else %} so'm{% endif %}</span>
+                </div>
+                {% else %}
+                <div class="flex items-end gap-2">
+                    <span class="text-4xl font-extrabold tracking-tighter">{{ course.price }}</span>
+                    <span class="text-sm text-gray-400 mb-1 font-light">UZS</span>
+                </div>
+                {% endif %}
+
+                <button class="w-full pro-gradient py-3 rounded-xl font-bold text-white hover:opacity-90 transition shadow-xl shadow-indigo-500/20 active:scale-95 text-sm tracking-wide">
+                    Kursga yozilish
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="glass rounded-2xl p-5 text-center">
+            <p class="text-3xl font-extrabold tracking-tight">{{ course.courses.count }}</p>
+            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">O'quvchilar</p>
+        </div>
+        <div class="glass rounded-2xl p-5 text-center">
+            <p class="text-3xl font-extrabold tracking-tight">
+                {% if course.discount_type == 'percent' %}{{ course.discount }}%{% else %}{{ course.discount }} so'm{% endif %}
+            </p>
+            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Chegirma</p>
+        </div>
+        <div class="glass rounded-2xl p-5 text-center">
+            <p class="text-3xl font-extrabold tracking-tight text-indigo-400">PRO</p>
+            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Daraja</p>
+        </div>
+        <div class="glass rounded-2xl p-5 text-center">
+            <p class="text-3xl font-extrabold tracking-tight text-emerald-400">
+                {% if course.discount %}Faol{% else %}Yo'q{% endif %}
+            </p>
+            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Taklif</p>
+        </div>
+    </div>
+
+    <!-- Students Table -->
+    <div class="glass rounded-3xl overflow-hidden">
+        <div class="px-8 py-6 border-b border-white/5 flex items-center justify-between">
+            <h2 class="text-lg font-bold tracking-tight">Ro'yxatdagi o'quvchilar</h2>
+            <span class="text-[10px] font-mono text-gray-500 bg-white/5 px-3 py-1 rounded-full uppercase tracking-widest">
+                {{ course.courses.count }} ta o'quvchi
+            </span>
+        </div>
+
+        {% if course.courses.all %}
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="text-[10px] uppercase tracking-widest text-gray-600 border-b border-white/5">
+                        <th class="text-left px-8 py-4">#</th>
+                        <th class="text-left px-8 py-4">Ism</th>
+                        <th class="text-left px-8 py-4">Yoshi</th>
+                        <th class="text-left px-8 py-4">Holat</th>
+                        <th class="text-left px-8 py-4">Kurslar soni</th>
+                        <th class="text-left px-8 py-4">Tug'ilgan kun</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in course.courses.all %}
+                    <tr class="border-b border-white/5 hover:bg-white/3 transition-colors group">
+                        <td class="px-8 py-5 text-gray-600 font-mono text-sm">{{ forloop.counter }}</td>
+                        <td class="px-8 py-5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 font-bold text-sm">
+                                    {{ student.name|first|upper }}
+                                </div>
+                                <span class="font-semibold group-hover:text-indigo-400 transition-colors">{{ student.name }}</span>
+                            </div>
+                        </td>
+                        <td class="px-8 py-5 text-gray-400 text-sm">{{ student.age }} yosh</td>
+                        <td class="px-8 py-5">
+                            {% if student.is_active %}
+                            <span class="text-[10px] font-bold py-1 px-3 bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20 uppercase tracking-widest">
+                                Faol
+                            </span>
+                            {% else %}
+                            <span class="text-[10px] font-bold py-1 px-3 bg-red-500/10 text-red-400 rounded-full border border-red-500/20 uppercase tracking-widest">
+                                Nofaol
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-8 py-5 text-gray-400 text-sm">{{ student.courses_count }} ta kurs</td>
+                        <td class="px-8 py-5 text-gray-500 font-mono text-sm">
+                            {% if student.birth_date %}{{ student.birth_date }}{% else %}—{% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="py-20 text-center">
+            <div class="text-5xl mb-4">👤</div>
+            <h3 class="text-lg font-bold text-gray-500 uppercase tracking-tight">Hali o'quvchi yo'q</h3>
+            <p class="text-gray-700 mt-2 text-sm">Bu kursga hali hech kim yozilmagan.</p>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+
+<footer class="py-20 text-center opacity-30 text-[10px] tracking-[0.5em] uppercase">
+    Designed for High-Performance Systems &copy; 2026
+</footer>
+{% endblock %}
