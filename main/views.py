@@ -2,9 +2,69 @@ from django.shortcuts import render, redirect
 from main.models import Course
 from django.http import HttpRequest
 import requests
+from django.contrib.auth.models import User
+from django.contrib.auth import login, authenticate
+from django.contrib import messages
+
 
 TOKEN = "8553368129:AAEBEtfmX-MCwYwngB-v6I3rpqAfq7Kv5UM"
 CHAT_ID = "-1003813831969"
+
+
+def register_view(request: HttpRequest):
+
+    if request.method == "POST":
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password1 = request.POST.get("password1")
+        password2 = request.POST.get("password2")
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Bunday username mavjud")
+            return redirect("register")
+        
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Bunday email mavjud")
+            return redirect("register")
+
+        if password1 != password2:
+            messages.warning(request, "Parollar mos emas!")
+            return redirect("register")
+        
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password1
+        )
+
+        messages.success(request, "Muvaffaqqiyatli ro'yxatdan o'tdingiz!")
+        return redirect("login")
+
+
+
+
+    return render(request, "main/register.html")
+
+
+
+def login_view(request: HttpRequest):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = authenticate(request, username=username, password=password)
+
+        if not user:
+            messages.error(request, "Login yoki parol xato!")
+            return redirect("login")
+        
+        login(request, user)
+        return redirect("index")
+
+
+    return render(request, "main/login.html")
+
+
 
 def index_view(request: HttpRequest):
     if request.method == "POST":
@@ -50,7 +110,10 @@ def index_view(request: HttpRequest):
 
 
 def course_detail(request, pk):
-    course = Course.objects.get(id=pk)
+    try:
+        course = Course.objects.get(id=pk)
+    except Exception as err:
+        course = None
     context = {
         "course": course
     }

@@ -13,6 +13,12 @@
         </a>
     </div>
 
+    {% if not course %}
+    <h2>Bu kurs topilmadi yoki o'chirib yuborilgan</h2>
+
+    {% else %}
+
+    
     <!-- Hero Section -->
     <div class="glass rounded-3xl p-10 relative overflow-hidden">
         <!-- Background glow -->
@@ -157,6 +163,7 @@
     </div>
 
 </div>
+    {% endif %}
 
 <footer class="py-20 text-center opacity-30 text-[10px] tracking-[0.5em] uppercase">
     Designed for High-Performance Systems &copy; 2026

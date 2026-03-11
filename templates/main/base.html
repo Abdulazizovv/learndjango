@@ -33,12 +33,44 @@
                 <h2 class="text-xl font-extrabold tracking-tight">NEXUS <span class="text-indigo-500">PRO</span></h2>
             </div>
             <div class="text-[10px] text-gray-500 font-mono tracking-widest uppercase bg-white/5 px-3 py-1 rounded-full">
-                System Status: Optimized
+                User: {{request.user}}
             </div>
         </div>
     </nav>
 
     <main class="max-w-7xl mx-auto px-6">
+        {% if messages %}
+        <div class="max-w-7xl mx-auto px-6 mb-6 space-y-3">
+            {% for message in messages %}
+            
+            <div class="
+                glass px-5 py-4 rounded-xl flex items-center justify-between
+                {% if message.tags == 'success' %} border-green-500/30 {% endif %}
+                {% if message.tags == 'error' %} border-red-500/30 {% endif %}
+                {% if message.tags == 'warning' %} border-yellow-500/30 {% endif %}
+                {% if message.tags == 'info' %} border-indigo-500/30 {% endif %}
+            ">
+
+                <span class="
+                text-sm font-medium
+                {% if message.tags == 'success' %} text-green-400 {% endif %}
+                {% if message.tags == 'error' %} text-red-400 {% endif %}
+                {% if message.tags == 'warning' %} text-yellow-400 {% endif %}
+                {% if message.tags == 'info' %} text-indigo-400 {% endif %}
+                ">
+                    {{ message }}
+                </span>
+
+                <button onclick="this.parentElement.remove()" 
+                class="text-gray-500 hover:text-white text-sm">
+                    ✕
+                </button>
+
+            </div>
+
+            {% endfor %}
+        </div>
+        {% endif %}
         {% block content %}
         {% endblock content %}
     </main>
