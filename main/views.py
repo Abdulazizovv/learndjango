@@ -3,7 +3,7 @@ from main.models import Course
 from django.http import HttpRequest
 import requests
 from django.contrib.auth.models import User
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 
 
@@ -65,8 +65,15 @@ def login_view(request: HttpRequest):
     return render(request, "main/login.html")
 
 
+def logout_view(request):
+    logout(request)
+    return redirect("index")
+
+
 
 def index_view(request: HttpRequest):
+
+
     if request.method == "POST":
         course_name = request.POST.get("course_name", "Unknown")
         course_price = request.POST.get("course_price", 0)

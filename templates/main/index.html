@@ -4,6 +4,13 @@
 <div class="space-y-12">
     
     <div class="relative py-10">
+        {% if request.user.is_authenticated %}
+        <h1>Tizimga kirilgan</h1>
+        {% else %}
+        <h1>Tizimga kirilmagan</h1>
+
+        {% endif %}
+
         <h1 class="text-5xl md:text-7xl font-extrabold tracking-tighter mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/30">
             Intellektual kurslar <br/> ekotizimi.
         </h1>

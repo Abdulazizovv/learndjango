@@ -34,6 +34,17 @@
             </div>
             <div class="text-[10px] text-gray-500 font-mono tracking-widest uppercase bg-white/5 px-3 py-1 rounded-full">
                 User: {{request.user}}
+                {% if request.user.is_authenticated %}
+                <button onclick="openLogoutModal()"
+                class="text-sm bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-2 rounded-lg hover:bg-red-500/20 transition">
+                    Logout
+                </button>
+                {% else %}
+                <button"
+                class="text-sm bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-2 rounded-lg hover:bg-red-500/20 transition">
+                    <a href="{% url 'login' %}">Login</a>
+                </button>
+                {% endif %}
             </div>
         </div>
     </nav>
@@ -73,7 +84,23 @@
         {% endif %}
         {% block content %}
         {% endblock content %}
+
+        {% include "main/modals/logout.html" %}
     </main>
+
+    <script>
+
+    function openLogoutModal() {
+        document.getElementById("logoutModal").classList.remove("hidden")
+        document.getElementById("logoutModal").classList.add("flex")
+    }
+
+    function closeLogoutModal() {
+        document.getElementById("logoutModal").classList.add("hidden")
+        document.getElementById("logoutModal").classList.remove("flex")
+    }
+
+    </script>
 
 </body>
 </html>
